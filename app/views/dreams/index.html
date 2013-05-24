@@ -1,0 +1,35 @@
+<div id="dream-index">
+  <button id="refresh">Refresh</button><br>
+</div>
+<div id="dream-form">
+  <label>Title<input type="text" id="dream-text-field" value=""></label><br>
+  <label>Date<input type="date" id="dream-date-field" value=""></label><br>
+  <label>Entry<textarea id="dream-text-area" value=""></textarea></label><br>
+  <button id="submit-dream">Submit</button>
+</div>
+
+<script type="text/javascript">
+$(function(){
+  var dreamIndexEl = $("#dream-index");
+  var dreamIndexView = new DS.DreamIndexView(dreamIndexEl);
+  var refreshButtonEl = $("#refresh");
+
+  var dreamTextFieldEl = $("#dream-text-field");
+  var dreamDateFieldEl = $("#dream-date-field");
+  var dreamTextAreaEl = $("#dream-text-area");
+  var submitButton = $("#submit-dream");
+
+  var dreamFormView = new DS.DreamFormView(
+    dreamTextFieldEl,
+    dreamDateFieldEl,
+    dreamTextAreaEl,
+    submitButton,
+    function(newDream){
+      newDream.save();
+    }
+  )
+  dreamFormView.bind();
+
+  DS.Dream.fetchAll();
+})
+</script>

@@ -7,10 +7,15 @@ class DreamsController < ApplicationController
   end
 
   def create
+    @dream = Dream.create!(params[:dream])
 
+    respond_to do |format|
+      format.json {render json: @dream}
+    end
   end
 
   def update
 
   end
+
 end
