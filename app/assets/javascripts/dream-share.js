@@ -28,5 +28,37 @@ Dream.prototype.save = function(){
 Dream.all = [];
 Dream.callbacks = [];
 Dream.fetchAll = function(){
+  $.getJSON(
+    "/dreams.json",
+    function(data){
+      Dream.all = [];
+      _.each(data, function(datum){
+        Dream.all.push(new Dream(datum.id, datum.title,
+                                 datum.date, datum.entry));
+      });
 
+      _.(Dream.callbacks).each(function(callback){
+        callback();
+      });
+    });
+};
+
+function DreamsView(el){
+  var that = this;
+  that.$el = $(el);
+
+  Dream.callbacks.push(function(){
+    that.render();
+  });
+};
+
+DreamsView.prototype.render = function(){
+  var that = this;
+
+  var ul = $("<ul></ul>");
+  _.each(Dream.all. function(dream){
+    ul.append($("<li></li>").text(dream.entry));
+  });
+
+  that.$el.html(ul);
 };
