@@ -28,10 +28,12 @@ var DS = (function() {
         });
       }
     );
+
   };
 
   Dream.all = [];
   Dream.callbacks = [];
+
   Dream.fetchAll = function(){
     $.getJSON(
       "/dreams.json",
@@ -48,20 +50,38 @@ var DS = (function() {
       });
   };
 
-  function DreamIndexView(el){
+  Dream.find = function(id){
+    for(var i = 0; i < Dream.all.length; i++){
+      if(Dream.all[i].id == id){
+        return Dream.all[i]
+      }
+    }
+  }
+
+  function DreamIndexView(el, refreshButton){
     var that = this;
     that.$el = $(el);
+    that.$button = $(refreshButton);
 
     Dream.callbacks.push(function(){
       that.render();
     });
   };
 
+  DreamIndexView.prototype.bind = function(){
+    var that = this;
+
+    that.buttonClickHandler = function(){
+      Dream.fetchAll();
+    };
+    that.$button.click(that.buttonClickHandler);
+  };
+
   DreamIndexView.prototype.render = function(){
     var that = this;
     var ul = $("<ul></ul>");
     _.each(Dream.all, function(dream){
-      ul.append($("<li></li>").text(dream.title));
+      ul.append($("<li></li>").text(dream.title).attr("data-id", dream.id));
     });
 
     that.$el.empty();
@@ -74,6 +94,15 @@ var DS = (function() {
     this.$textArea = $(textArea);
     this.$button = $(button);
     this.callback = callback;
+
+    var that = this;
+
+    Dream.callbacks.push(function(){
+      that.$button.removeAttr('disabled');
+      that.$textField.val("");
+      that.$dateField.val("");
+      that.$textArea.val("");
+    });
   };
 
   DreamFormView.prototype.bind = function(){
@@ -81,6 +110,7 @@ var DS = (function() {
 
     that.buttonClickHandler = function (){
       that.submit();
+      that.$button.attr('disabled', 'disabled');
     };
     that.$button.click(that.buttonClickHandler);
   };
@@ -89,17 +119,28 @@ var DS = (function() {
     var that = this;
 
     var newDream = new Dream(null, that.$textField.val(), that.$dateField.val(), that.$textArea.val());
-    that.$textField.val("");
-    that.$dateField.val("");
-    that.$textArea.val("");
+
 
     that.callback(newDream);
+  };
+
+  function DreamView(dreamEl, el){
+    this.$dreamEl = $(dreamEl);
+    this.$el = $(el);
+    this.dream = Dream.find(this.$dreamEl.attr("data-id"));
+
+    this.$el.empty();
+    this.$el.append($("<p></p>").text(this.dream.date));
+    this.$el.append($("<p></p>").text(this.dream.entry));
+
   };
 
   return {
     Dream: Dream,
     DreamIndexView: DreamIndexView,
-    DreamFormView: DreamFormView
+    DreamFormView: DreamFormView,
+    DreamView: DreamView
+
   };
 
 })();
