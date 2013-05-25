@@ -3,12 +3,13 @@ var DS = (function() {
     this.id = id;
     this.title = title;
     this.date = date;
-    this.entry = entry;
+    this.entry = entry; //REV: Good choice of variable name.
   }
 
   Dream.prototype.save = function(){
     var that = this;
-
+		
+		//REV: Add some if/else logic to prevent bad submissions
     $.post(
       "/dreams.json",
       {
@@ -40,8 +41,8 @@ var DS = (function() {
       function(data){
         Dream.all = [];
         _.each(data, function(dream){
-          Dream.all.push(new Dream(dream.id, dream.title,
-                                   dream.date, dream.entry));
+          Dream.all.push(new Dream(dream.id, dream.title, //REV: Maybe just one arg per line
+                                   dream.date, dream.entry)); 
         });
 
         _(Dream.callbacks).each(function(callback){
@@ -96,9 +97,11 @@ var DS = (function() {
     this.callback = callback;
 
     var that = this;
-
+		
+		//REV: Wrap this in if/else logic to 
+		//REV: prevent clearing fields when bad data submitted
     Dream.callbacks.push(function(){
-      that.$button.removeAttr('disabled');
+      that.$button.removeAttr('disabled'); //REV: I was wondering how to do this!
       that.$textField.val("");
       that.$dateField.val("");
       that.$textArea.val("");

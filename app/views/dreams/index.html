@@ -1,6 +1,7 @@
 <div id="dream-index"></div>
 <button id="refresh">Refresh</button><br>
-
+<!-- REV: I like how you formatted the form. -->
+<!-- REV: Wish you had added some h1, h2 tags to delineate content -->
 <div id="dream-form">
   <label>Title<input type="text" id="dream-text-field" value=""></label><br>
   <label>Date<input type="date" id="dream-date-field" value=""></label><br>
@@ -20,7 +21,7 @@ $(function(){
   dreamIndexView.bind();
 
 
-
+	//REV: Nice solution. This is right where I got stuck on Friday.
   dreamIndexEl.on("click", "li", function(){
     var dreamEl = $(this);
     var dreamViewEl = $("#dream-view");
