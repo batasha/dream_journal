@@ -50,7 +50,7 @@ var DS = (function() {
       });
   };
 
-  Dream.find = function(id){
+  Dream.find = function(id){										// REV: oh, makes sense.
     for(var i = 0; i < Dream.all.length; i++){
       if(Dream.all[i].id == id){
         return Dream.all[i]
@@ -127,8 +127,8 @@ var DS = (function() {
   function DreamView(dreamEl, el){
     this.$dreamEl = $(dreamEl);
     this.$el = $(el);
-    this.dream = Dream.find(this.$dreamEl.attr("data-id"));
-
+    this.dream = Dream.find(this.$dreamEl.attr("data-id"));   // REV: ah, this is the part I was missing. 
+																															// now I see.
     this.$el.empty();
     this.$el.append($("<p></p>").text(this.dream.date));
     this.$el.append($("<p></p>").text(this.dream.entry));
